@@ -1,0 +1,23 @@
+
+
+
+#approach2hashmap
+class Solution:
+    def majorityElement(self, nums):
+        counts = collections.Counter(nums)
+        return max(counts.keys(), key=counts.get)
+
+
+
+#approach6 boyer-moore voting algorithm
+class Solution:
+    def majorityElement(self, nums):
+        count = 0
+        candidate = None
+
+        for num in nums:
+            if count == 0:
+                candidate = num
+            count += (1 if num == candidate else -1)
+
+        return candidate
