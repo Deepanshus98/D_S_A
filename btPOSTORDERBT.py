@@ -1,0 +1,43 @@
+Recursive function to perform postorder traversal on the tree
+def postorder(root):
+ 
+    # return if the current node is empty
+    if root is None:
+        return
+ 
+    # Traverse the left subtree
+    postorder(root.left)
+ 
+    # Traverse the right subtree
+    postorder(root.right)
+ 
+    # Display the data part of the root (or current node)
+    print(root.data, end=' ')
+
+# Iterative function to perform postorder traversal on the tree
+def postorderIterative(root):
+ 
+    # create an empty stack and push the root node
+    stack = deque()
+    stack.append(root)
+ 
+    # create another stack to store postorder traversal
+    out = deque()
+ 
+    # loop till stack is empty
+    while stack:
+ 
+        # pop a node from the stack and push the data into the output stack
+        curr = stack.pop()
+        out.append(curr.data)
+ 
+        # push the left and right child of the popped node into the stack
+        if curr.left:
+            stack.append(curr.left)
+ 
+        if curr.right:
+            stack.append(curr.right)
+ 
+    # print postorder traversal
+    while out:
+        print(out.pop(), end=' ')
