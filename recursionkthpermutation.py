@@ -1,31 +1,30 @@
-def factorial(n):
-  if n == 0 or n == 1:
-    return 1
-  return n * factorial(n -1 )
+class Solution(object):
+    def getPermutation(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: str
+        """
+        
+        nums = []
+        for index in range(1, n+1):
+        	nums.append(index)
 
-def find_kth_permutation(v, k, result):
-  if not v:
-    return
-  
-  n = len(v)
-  # count is number of permutations starting with first digit
-  count = factorial(n - 1)
-  selected = (k - 1) // count
-  
-  result += str(v[selected])
-  del v[selected]
-  k = k - (count * selected)
-  find_kth_permutation(v, k, result)
-  
-def get_permutation(n, k):
-  v = list(range(1, n + 1))
-  result = []
-  find_kth_permutation(v, k, result)
-  return ''.join(result)
+        def permute(nums):
+        	if len(nums) == 0:
+        		return []
+        	if len(nums) == 1:
+        		return [nums]
 
-def main():
-  n = factorial(4)
-  for i in range(1, n + 1):
-    print(str(i) + "th permutation = \t", get_permutation(4, i))
+        	result = []
+        	for index in range(len(nums)):
+        		for p in permute(nums[0:index] + nums[index+1:]):
+        			result.append([nums[index]] + p)
 
-main()
+        	return result
+
+        value = permute(nums)[k-1]
+        result = ""
+        for val in value:
+        	result += str(val)
+        return result
