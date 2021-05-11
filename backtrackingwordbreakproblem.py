@@ -1,34 +1,16 @@
-# Function to segment given string into a space-separated
-# sequence of one or more dictionary words
-def wordBreak(dict, str, out=""):
- 
-    # if the end of the string is reached,
-    # print the output string
-    if not str:
-        print(out)
-        return
- 
-    for i in range(1, len(str) + 1):
-        # consider all prefixes of the current string
-        prefix = str[:i]
- 
-        # if the prefix is present in the dictionary, add it to the
-        # output string and recur for the remaining string
-        if prefix in dict:
-            wordBreak(dict, str[i:], out + " " + prefix)
- 
- 
-# Word Break Problem Implementation in Python
-if __name__ == '__main__':
- 
-    # List of strings to represent a dictionary
-    dict = [
-        "self", "th", "is", "famous", "Word",
-        "break", "b", "r", "e", "a", "k", "br",
-        "bre", "brea", "ak", "problem"
-    ]
- 
-    # input string
-    str = "Wordbreakproblem"
- 
-    wordBreak(dict, str)
+class Solution:
+  # @param s, a string
+  # @param dict, a set of string
+  # @return a boolean
+  def wordBreak(self, s, dict):
+    sLen = len(s)
+    possible = [False for i in range(sLen + 1)]
+    possible[0] = True
+
+    for i in range(sLen):
+      for j in range(i + 1):
+        if possible[j] and s[j:i + 1] in dict:
+            possible[i + 1] = True
+            break;
+
+    return possible[sLen]
