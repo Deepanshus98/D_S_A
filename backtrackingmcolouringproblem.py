@@ -1,4 +1,4 @@
-# Python program for solution of M Coloring 
+# Python program for solution of M Coloring
 # problem using backtracking
  
 class Graph():
@@ -8,7 +8,7 @@ class Graph():
         self.graph = [[0 for column in range(vertices)]\
                               for row in range(vertices)]
  
-    # A utility function to check 
+    # A utility function to check
     # if the current color assignment
     # is safe for vertex v
     def isSafe(self, v, colour, c):
@@ -36,7 +36,7 @@ class Graph():
             return False
  
         # Print the solution
-        print "Solution exist and Following 
+        print "Solution exist and Following
                   are the assigned colours:"
         for c in colour:
             print c,
@@ -47,3 +47,4 @@ g = Graph(4)
 g.graph = [[0, 1, 1, 1], [1, 0, 1, 0], [1, 1, 0, 1], [1, 0, 1, 0]]
 m = 3
 g.graphColouring(m)
+ 
