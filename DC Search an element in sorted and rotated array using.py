@@ -1,36 +1,29 @@
-# Search an element in sorted and rotated array using 
-# single pass of Binary Search 
-  
-# Returns index of key in arr[l..h] if key is present, 
-# otherwise returns -1 
-def search (arr, l, h, key): 
-    if l > h: 
+class Solution(object):
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        if not nums:
+        	return -1
+
+        left, right = 0, len(nums) - 1
+
+        while left <= right:
+        	mid = (left + right) / 2
+        	if nums[mid] == target:
+        		return mid
+
+        	if nums[left] <= nums[mid]:
+        		if target >= nums[left] and target <= nums[mid]:
+        			right = mid - 1
+        		else:
+        			left = mid + 1
+        	else:
+        		if target >= nums[mid] and target <= nums[right]:
+        			left = mid + 1
+        		else:
+        			right = mid - 1
+
         return -1
-      
-    mid = (l + h) // 2
-    if arr[mid] == key: 
-        return mid 
-  
-    # If arr[l...mid] is sorted  
-    if arr[l] <= arr[mid]: 
-  
-        # As this subarray is sorted, we can quickly 
-        # check if key lies in half or other half  
-        if key >= arr[l] and key <= arr[mid]: 
-            return search(arr, l, mid-1, key) 
-        return search(arr, mid + 1, h, key) 
-  
-    # If arr[l..mid] is not sorted, then arr[mid... r] 
-    # must be sorted 
-    if key >= arr[mid] and key <= arr[h]: 
-        return search(a, mid + 1, h, key) 
-    return search(arr, l, mid-1, key) 
-  
-# Driver program 
-arr = [4, 5, 6, 7, 8, 9, 1, 2, 3] 
-key = 6
-i = search(arr, 0, len(arr)-1, key) 
-if i != -1: 
-    print ("Index: % d"% i) 
-else: 
-    print ("Key not found") 
