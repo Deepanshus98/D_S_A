@@ -2,21 +2,22 @@
 # whether a no is 
 # power of two
 import math
+class Solution(object):
+    def Log2(self, x):
+        if x == 0:
+            return false
  
-# Function to check
-# Log base 2
-def Log2(x):
-    if x == 0:
-        return false;
- 
-    return (math.log10(x) /
-            math.log10(2));
+        return (math.log10(x) / math.log10(2))
  
 # Function to check
 # if x is power of 2
-def isPowerOfTwo(n):
-    return (math.ceil(Log2(n)) ==
-            math.floor(Log2(n)));
+    def isPowerOfTwo(self, n):
+        return (math.ceil(self.Log2(n)) == math.floor(self.Log2(n)))
+        """
+        :type n: int
+        :rtype: bool
+        """
+        
  
 # Driver Code
 if(isPowerOfTwo(31)):
