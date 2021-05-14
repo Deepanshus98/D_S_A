@@ -1,79 +1,23 @@
-Python 3.8.6 (tags/v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)] on win32
-Type "help", "copyright", "credits" or "license()" for more information.
->>> # Python program
- 
-import sys
- 
-# A utility function to print a
-# substring str[low..high]
-def printSubStr(st, low, high) :
-    sys.stdout.write(st[low : high + 1])
-    sys.stdout.flush()
-    return ''
- 
-# This function prints the longest palindrome
-# substring of st[]. It also returns the length
-# of the longest palindrome
-def longestPalSubstr(st) :
-    n = len(st) # get length of input string
- 
-    # table[i][j] will be false if substring 
-    # str[i..j] is not palindrome. Else 
-    # table[i][j] will be true
-    table = [[0 for x in range(n)] for y
-                          in range(n)] 
-     
-    # All substrings of length 1 are
-    # palindromes
-    maxLength = 1
-    i = 0
-    while (i < n) :
-        table[i][i] = True
-        i = i + 1
-     
-    # check for sub-string of length 2.
-    start = 0
-    i = 0
-    while i < n - 1 :
-        if (st[i] == st[i + 1]) :
-            table[i][i + 1] = True
-            start = i
-            maxLength = 2
-        i = i + 1
-     
-    # Check for lengths greater than 2. 
-    # k is length of substring
-    k = 3
-    while k <= n :
-        # Fix the starting index
-        i = 0
-        while i < (n - k + 1) :
-             
-            # Get the ending index of 
-            # substring from starting 
-            # index i and length k
-            j = i + k - 1
-     
-            # checking for sub-string from
-            # ith index to jth index iff 
-            # st[i + 1] to st[(j-1)] is a 
-            # palindrome
-            if (table[i + 1][j - 1] and
-                      st[i] == st[j]) :
-                table[i][j] = True
-     
-                if (k > maxLength) :
-                    start = i
-                    maxLength = k
-            i = i + 1
-        k = k + 1
-    print "Longest palindrome substring is: ", printSubStr(st, start,
-                                               start + maxLength - 1)
- 
-    return maxLength # return length of LPS
- 
- 
-# Driver program to test above functions
-st = "forgeeksskeegfor"
-l = longestPalSubstr(st)
-print "Length is:", l
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+
+        def expand(s, left, right):
+        	while left >= 0 and right < len(s) and s[left] == s[right]:
+        		left -= 1
+        		right += 1
+        	return right-left-1
+
+        start, end = 0, 0
+        for index in range(len(s)):
+        	even_len = expand(s, index, index+1)
+        	odd_len = expand(s, index, index)
+        	length = max(even_len, odd_len)
+        	if length > (end-start):
+        		start = index - (length-1)/2
+        		end = index +length/2
+
+        return s[start:end+1]
