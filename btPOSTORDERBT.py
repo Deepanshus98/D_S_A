@@ -1,43 +1,36 @@
-Recursive function to perform postorder traversal on the tree
-def postorder(root):
- 
-    # return if the current node is empty
-    if root is None:
-        return
- 
-    # Traverse the left subtree
-    postorder(root.left)
- 
-    # Traverse the right subtree
-    postorder(root.right)
- 
-    # Display the data part of the root (or current node)
-    print(root.data, end=' ')
+#with recursion
+class Solution:
+    def postorderTraversal(self, root: TreeNode) -> List[int]:
+        if root == None:
+            return []
+        res = []
+        res += self.postorderTraversal(root.left)
+        res += self.postorderTraversal(root.right)
+        res.append(root.val)
+        return res
+#without recursion
 
-# Iterative function to perform postorder traversal on the tree
-def postorderIterative(root):
- 
-    # create an empty stack and push the root node
-    stack = deque()
-    stack.append(root)
- 
-    # create another stack to store postorder traversal
-    out = deque()
- 
-    # loop till stack is empty
-    while stack:
- 
-        # pop a node from the stack and push the data into the output stack
-        curr = stack.pop()
-        out.append(curr.data)
- 
-        # push the left and right child of the popped node into the stack
-        if curr.left:
-            stack.append(curr.left)
- 
-        if curr.right:
-            stack.append(curr.right)
- 
-    # print postorder traversal
-    while out:
-        print(out.pop(), end=' ')
+class Solution:  
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        result = list()  #Storing the final result
+        if root == None:
+            return result
+        
+        stack = list()  # 
+        while stack or root:
+            if root != None:   
+                stack.append(root)
+                root = root.right
+            else:
+                root = stack.pop()
+                result.append(root.val)
+                root = root.right
+               
+                root = stack.pop()
+                stack.append(root)
+
+        return result
