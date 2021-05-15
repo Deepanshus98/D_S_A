@@ -1,45 +1,35 @@
-# Recursive function to perform inorder traversal on the tree
-def inorder(root):
- 
-    # return if the current node is empty
-    if root is None:
-        return
- 
-    # Traverse the left subtree
-    inorder(root.left)
- 
-    # Display the data part of the root (or current node)
-    print(root.data, end=' ')
- 
-    # Traverse the right subtree
-    inorder(root.right)
-
-
-# Iterative function to perform inorder traversal on the tree
-def inorderIterative(root):
- 
-    # create an empty stack
-    stack = deque()
- 
-    # start from the root node (set current node to the root node)
-    curr = root
- 
-    # if the current node is None and the stack is also empty, we're done
-    while stack or curr:
- 
-        # if the current node exists, push it into the stack (defer it)
-        # and move to its left child
-        if curr:
-            stack.append(curr)
-            curr = curr.left
-        else:
-            # otherwise, if the current node is None, pop an element from the stack,
-            # print it, and finally set the current node to its right child
-            curr = stack.pop()
-            print(curr.data, end=' ')
- 
-            curr = curr.right
- 
-
-
-
+#without recursion
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        stack = []
+        res = []
+        while root or stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            if stack:
+                t= stack.pop(-1)
+                res.append(t.val)
+                if t.right:
+                    root = t.right
+        
+        return res
+#with recursion
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        
+        ret=[]
+        if root==None:
+            return ret
+        ret.extend(self.inorderTraversal(root.left))
+        ret.append(root.val)
+        ret.extend(self.inorderTraversal(root.right))
+        return ret
