@@ -1,34 +1,61 @@
-#https://www.youtube.com/watch?v=g6Q1cpQvz8A
+#BFS
 class Codec:
 
-    def serialize(self, root: TreeNode) -> str:
+    def serialize(self, root):
         """Encodes a tree to a single string.
-        """
-        res = []
-        
-        def preorder(root):
-            if root:
-                res.append(str(root.val))
-                preorder(root.left)
-                preorder(root.right)
-        
-        preorder(root)
-        return " ".join(res)
 
-    def deserialize(self, data: str) -> TreeNode:
-        """Decodes your encoded data to tree.
+        :type root: TreeNode
+        :rtype: str
         """
-        data = [int(x) for x in data.split()]
-        
-        def build(pre, inorder):
-            if not pre:
-                return None
-            
-            node = TreeNode(pre[0])
-            temp = inorder.index(node.val)
-            node.left = build(pre[1: temp + 1], inorder[:temp])
-            node.right = build(pre[temp + 1 :], inorder[temp + 1 :])
-            
-            return node
-        
-        return build(data, sorted(data))
+
+        if not root:
+            return ""
+
+        res = []
+
+        Q = collections.deque()
+        Q.append(root)
+
+        while Q:
+            node = Q.popleft()
+            if node:
+                res.append(str(node.val))
+                Q.append(node.left)
+                Q.append(node.right)
+            else:
+                res.append('null')
+
+        return ','.join(res)
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+
+        :type data: str
+        :rtype: TreeNode
+        """
+
+        if len(data) == 0:
+            return None
+
+        data = data.split(',')
+
+        Q = collections.deque()
+        root = TreeNode(data[0])
+        Q.append(root)
+        idx = 1
+
+        while(Q):
+            node = Q.popleft()
+
+            if data[idx] != 'null':
+                node.left = TreeNode(data[idx])            
+                Q.append(node.left)
+
+            idx += 1
+
+            if data[idx] != 'null':
+                node.right = TreeNode(data[idx])            
+                Q.append(node.right)
+
+            idx += 1        
+        return root
