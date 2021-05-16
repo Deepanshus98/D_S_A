@@ -1,74 +1,76 @@
-import sys
+# Python program to find largest
+# BST in a Binary Tree.
  
+INT_MIN = -2147483648
+INT_MAX = 2147483647
  
-# A class to store a BST node
-class Node:
-    # constructor
-    def __init__(self, data, left=None, right=None):
+# Helper function that allocates a new
+# node with the given data and None left
+# and right pointers.
+class newNode:
+ 
+    # Constructor to create a new node
+    def __init__(self, data):
         self.data = data
-        self.left = left
-        self.right = right
+        self.left = None
+        self.right = None
  
+# Returns Information about subtree. The
+# Information also includes size of largest
+# subtree which is a BST
+def largestBSTBT(root):
+     
+# Base cases : When tree is empty or it has
+    # one child.
+    if (root == None):
+        return 0, INT_MIN, INT_MAX, 0, True
+    if (root.left == None and root.right == None) :
+        return 1, root.data, root.data, 1, True
  
-# Recursive function to calculate the size of a given binary tree
-def size(root):
+    # Recur for left subtree and right subtrees
+    l = largestBSTBT(root.left)
+    r = largestBSTBT(root.right)
  
-    # base case: empty tree has size 0
-    if root is None:
-        return 0
+    # Create a return variable and initialize its
+    # size.
+    ret = [0, 0, 0, 0, 0]
+    ret[0] = (1 + l[0] + r[0])
  
-    # recursively calculate the size of the left and right subtrees and
-    # return the sum of their sizes + 1 (for root node)
-    return size(root.left) + 1 + size(root.right)
+    # If whole tree rooted under current root is
+    # BST.
+    if (l[4] and r[4] and l[1] <
+        root.data and r[2] > root.data) :
+     
+        ret[2] = min(l[2], min(r[2], root.data))
+        ret[1] = max(r[1], max(l[1], root.data))
  
+        # Update answer for tree rooted under
+        # current 'root'
+        ret[3] = ret[0]
+        ret[4] = True
  
-# Recursive function to determine if a given binary tree is a BST or not
-# by keeping a valid range (starting from [-INFINITY, INFINITY]) and
-# keep shrinking it down for each node as we go down recursively
-def isBST(node, min, max):
+        return ret
+     
  
-    # base case
-    if node is None:
-        return True
+    # If whole tree is not BST, return maximum
+    # of left and right subtrees
+    ret[3] = max(l[3], r[3])
+    ret[4] = False
  
-    # if the node's value falls outside the valid range
-    if node.data < min or node.data > max:
-        return False
+    return ret
  
-    # recursively check left and right subtrees with updated range
-    return isBST(node.left, min, node.data) and isBST(node.right, node.data, max)
- 
- 
-# Recursive function to find the size of the largest BST in a given binary tree
-def findLargestBST(root):
- 
-    if isBST(root, -sys.maxsize, sys.maxsize):
-        return size(root)
- 
-    return max(findLargestBST(root.left), findLargestBST(root.right))
- 
- 
+# Driver Code
 if __name__ == '__main__':
- 
-    ''' Construct the following binary tree
-              10
-            /    \
-           /      \
-          15       8
-         /  \     / \
-        /    \   /   \
-       12    20 5     2
-    '''
- 
-    root = Node(10)
- 
-    root.left = Node(15)
-    root.right = Node(8)
- 
-    root.left.left = Node(12)
-    root.left.right = Node(20)
- 
-    root.right.left = Node(5)
-    root.right.right = Node(2)
- 
-    print("The size of the largest BST is", findLargestBST(root))
+     
+    """Let us construct the following Tree
+        60
+        / \
+        65 70
+    /
+    50 """
+    root = newNode(60)
+    root.left = newNode(65)
+    root.right = newNode(70)
+    root.left.left = newNode(50)
+    print("Size of the largest BST is",
+                    largestBSTBT(root)[3])
