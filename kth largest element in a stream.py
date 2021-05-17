@@ -1,50 +1,25 @@
-import heapq
- 
- 
-class MinHeap:
- 
-    def __init__(self, k):
-        self.pool = []
+from heapq import heapify, heappush, heappop, heappushpop
+
+class KthLargest:
+
+    def __init__(self, k, nums):
+        """
+        :type k: int
+        :type nums: List[int]
+        """
         self.k = k
- 
-    def add(self, n):
- 
-        # if the min-heap's size is less than `k`, push the current element
-        # into the min-heap
-        if len(self.pool) < self.k:
-            heapq.heappush(self.pool, n)
- 
-        # otherwise, if the current element is more than the smallest element
-        # in the min-heap, remove the smallest element from the heap and
-        # push the current element
-        elif self.pool[0] < n:
-            heapq.heappushpop(self.pool, n)
- 
-        # if the size of the min-heap reaches `k`, return the top element
-        if len(self.pool) == self.k:
-            return self.pool[0]
+        self.k_heap = nums
+        heapify(self.k_heap)
+        while len(self.k_heap) > k:
+            heappop(self.k_heap)
+
+    def add(self, val):
+        """
+        :type val: int
+        :rtype: int
+        """
+        if len(self.k_heap) < self.k:
+            heappush(self.k_heap, val)
         else:
-            return -1
- 
- 
-# Function to find the k'th largest element in a stream
-def findKthLargest(k):
- 
-    # create a min-heap using MinHeap class
-    pq = MinHeap(k)
- 
-    # loop till the end-of-file (EOF) is reached
-    while True:
-        try:
-            x = pq.add(int(input()))
-            if x != -1:
-                print("The k'th largest element is", x)
-        except EOFError:
-            break
- 
- 
-if __name__ == '__main__':
- 
-    k = 3
-    findKthLargest(k)
- 
+            heappushpop(self.k_heap, val)
+        return self.k_heap[0]
