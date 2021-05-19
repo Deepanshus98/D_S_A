@@ -50,3 +50,22 @@ if __name__ == '__main__':
         print("The string can be segmented")
     else:
         print("The string can't be segmented")
+
+
+#leetcode 139. Word Break
+#Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+#Note that the same word in the dictionary may be reused multiple times in the segmentation.
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+            L = len(s)
+            dp = [False]*(L+1)
+            dp[0]=True
+            for i in range(1,L+1):
+                for j in range(i):
+                    if dp[j] and s[j:i] in wordDict:
+                        print(s[j:i])
+                        dp[i] = True
+            return dp[-1]
+
+    
