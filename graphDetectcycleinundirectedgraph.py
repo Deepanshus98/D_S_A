@@ -1,95 +1,60 @@
-# Python Program to detect cycle in an undirected graph 
-from collections import defaultdict 
-   
-# This class represents a undirected  
-# graph using adjacency list representation 
-class Graph: 
-   
-    def __init__(self,vertices): 
-      
-        # No. of vertices 
-        self.V= vertices #No. of vertices 
-          
-        # Default dictionary to store graph 
-        self.graph = defaultdict(list) 
-  
-   
-    # Function to add an edge to graph 
-    def addEdge(self,v,w): 
-        
-        #Add w to v_s list 
-        self.graph[v].append(w) 
-          
-         #Add v to w_s list 
-        self.graph[w].append(v) 
-   
-    # A recursive function that uses  
-    # visited[] and parent to detect 
-    # cycle in subgraph reachable from vertex v. 
-    def isCyclicUtil(self,v,visited,parent): 
-  
-        # Mark the current node as visited  
-        visited[v]= True
-  
-        # Recur for all the vertices  
-        # adjacent to this vertex 
-        for i in self.graph[v]: 
-              
-            # If the node is not  
-            # visited then recurse on it 
-            if  visited[i]==False :  
-                if(self.isCyclicUtil(i,visited,v)): 
-                    return True
-            # If an adjacent vertex is  
-            # visited and not parent  
-            # of current vertex, 
-            # then there is a cycle 
-            elif  parent!=i: 
+class Graph:
+ 
+    # Constructor
+    def __init__(self, edges, N):
+ 
+        # A list of lists to represent an adjacency list
+        self.adjList = [[] for _ in range(N)]
+ 
+        # add edges to the undirected graph
+        for (src, dest) in edges:
+            self.adjList[src].append(dest)
+            self.adjList[dest].append(src)
+ 
+ 
+# Function to perform DFS traversal on the graph on a graph
+def DFS(graph, v, discovered, parent):
+ 
+    # mark the current node as discovered
+    discovered[v] = True
+ 
+    # do for every edge `v —> w`
+    for w in graph.adjList[v]:
+ 
+        # if `w` is not discovered
+        if not discovered[w]:
+            if DFS(graph, w, discovered, v):
                 return True
-          
-        return False
-           
-   
-    # Returns true if the graph  
-    # contains a cycle, else false. 
-    def isCyclic(self): 
-        
-        # Mark all the vertices  
-        # as not visited 
-        visited =[False]*(self.V) 
-          
-        # Call the recursive helper  
-        # function to detect cycle in different 
-        # DFS trees 
-        for i in range(self.V): 
-            
-            # Don't recur for u if it  
-            # is already visited 
-            if visited[i] ==False:  
-                if(self.isCyclicUtil 
-                       (i,visited,-1)) == True: 
-                    return True
-          
-        return False
-  
-# Create a graph given in the above diagram 
-g = Graph(5) 
-g.addEdge(1, 0) 
-g.addEdge(1, 2) 
-g.addEdge(2, 0) 
-g.addEdge(0, 3) 
-g.addEdge(3, 4) 
-  
-if g.isCyclic(): 
-    print "Graph contains cycle"
-else : 
-    print "Graph does not contain cycle "
-g1 = Graph(3) 
-g1.addEdge(0,1) 
-g1.addEdge(1,2) 
-  
-  
-if g1.isCyclic(): 
-    print "Graph contains cycle"
-else : 
-    print "Graph does not contain cycle "
+ 
+        # if `w` is discovered, and `w` is not a parent
+        elif w != parent:
+            # we found a back-edge (cycle)
+            return True
+ 
+    # No back-edges were found in the graph
+    return False
+ 
+ 
+if __name__ == '__main__':
+ 
+    # List of graph edges as per the above diagram
+    edges = [
+        (1, 2), (1, 7), (1, 8), (2, 3), (2, 6), (3, 4),
+        (3, 5), (8, 9), (8, 12), (9, 10), (9, 11), (11, 12)
+        # edge `11 —> 12` introduces a cycle in the graph
+    ]
+ 
+    # total number of nodes in the graph
+    N = 13
+ 
+    # build a graph from the given edges
+    graph = Graph(edges, N)
+ 
+    # to keep track of whether a vertex is discovered or not
+    discovered = [False] * N
+ 
+    # Perform DFS traversal from the first vertex
+    if DFS(graph, 1, discovered, -1):
+        print("The graph contains a cycle")
+    else:
+        print("The graph doesn't contain any cycle")
