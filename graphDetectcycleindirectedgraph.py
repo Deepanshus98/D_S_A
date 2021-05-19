@@ -1,56 +1,115 @@
-# Python program to detect cycle  
-# in a graph 
-  
-from collections import defaultdict 
-  
-class Graph(): 
-    def __init__(self,vertices): 
-        self.graph = defaultdict(list) 
-        self.V = vertices 
-  
-    def addEdge(self,u,v): 
-        self.graph[u].append(v) 
-  
-    def isCyclicUtil(self, v, visited, recStack): 
-  
-        # Mark current node as visited and  
-        # adds to recursion stack 
-        visited[v] = True
-        recStack[v] = True
-  
-        # Recur for all neighbours 
-        # if any neighbour is visited and in  
-        # recStack then graph is cyclic 
-        for neighbour in self.graph[v]: 
-            if visited[neighbour] == False: 
-                if self.isCyclicUtil(neighbour, visited, recStack) == True: 
-                    return True
-            elif recStack[neighbour] == True: 
-                return True
-  
-        # The node needs to be poped from  
-        # recursion stack before function ends 
-        recStack[v] = False
-        return False
-  
-    # Returns true if graph is cyclic else false 
-    def isCyclic(self): 
-        visited = [False] * self.V 
-        recStack = [False] * self.V 
-        for node in range(self.V): 
-            if visited[node] == False: 
-                if self.isCyclicUtil(node,visited,recStack) == True: 
-                    return True
-        return False
-  
-g = Graph(4) 
-g.addEdge(0, 1) 
-g.addEdge(0, 2) 
-g.addEdge(1, 2) 
-g.addEdge(2, 0) 
-g.addEdge(2, 3) 
-g.addEdge(3, 3) 
-if g.isCyclic() == 1: 
-    print "Graph has a cycle"
-else: 
-    print "Graph has no cycle"
+from collections import defaultdict
+
+class Graph:
+
+    def __init__(self, nodes):
+        # The default dictionary would create an empty list as a default (value) 
+        # for the nonexistent keys.
+        self.adjlist = defaultdict(list)
+        self.nodes = nodes
+        self.visited = [False] * nodes
+        # inpath stores the visited nodes in the traversal path
+        # for finding cycle in a directed graph.
+        self.inpath = [False] * nodes
+        self.cycle_present = False
+
+    def AddEdge (self, src, dst, bidirectional):
+
+        self.adjlist[src].append(dst)
+
+        if bidirectional: # Check if the edge is undirected (bidirectional)
+            self.adjlist[dst].append(src)
+
+    # Function detects cycle in a directed graph using
+    # DFS technique at its core.
+    def DetectCycle (self, src):
+
+        self.visited[src] = True
+
+        # Set the flag for the vertex visited in traversal path
+        self.inpath[src] = True
+
+        for adj_node in self.adjlist[src]:
+
+            if self.inpath[adj_node] == True:
+                self.cycle_present = True
+                return
+            elif self.visited[adj_node] == False:
+                self.DetectCycle (adj_node)
+
+        # Before we backtrack unset the flag for the src vertex as it
+        # might be in the next traversal path
+        self.inpath[src] = False
+
+    # Mark nodes unvisited for the next traversal
+    def MarkUnvisited (self):
+        self.visited = [False] * nodes
+
+    def CyclePresent (self):
+        return self.cycle_present
+
+def main():
+
+    nodes = 7
+    g1_directed = Graph(nodes)
+
+    #  Graph 1
+    #  6----------- 
+    #  ^          |
+    #  |          |
+    #  4<------5<--  
+    #  ^       ^
+    #  |       |
+    #  1<------3
+    #  ^       ^
+    #  |       |
+    #  0 ----->2
+
+    # Add edges to the directed graph
+    g1_directed.AddEdge(0, 1, False)
+    g1_directed.AddEdge(0, 2, False)
+    g1_directed.AddEdge(1, 4, False)
+    g1_directed.AddEdge(2, 3, False)
+    g1_directed.AddEdge(3, 1, False)
+    g1_directed.AddEdge(3, 5, False)
+    g1_directed.AddEdge(4, 6, False)
+    g1_directed.AddEdge(5, 4, False)
+    g1_directed.AddEdge(6, 5, False)
+
+    g1_directed.DetectCycle(0)
+
+    if g1_directed.CyclePresent() == True:
+       print("Cycle found in the directed graph g1")
+    else:
+       print("Cycle not found in the directed graph g1")
+
+    # Graph 2
+    # 4-
+    # ^ \
+    # |  \
+    # 3   \
+    # ^    \
+    # |     \
+    # 2      \
+    # ^       \
+    # |        \
+    # 0--->1<---
+
+    nodes = 5
+    g2_directed = Graph(nodes)
+
+    g2_directed.AddEdge(0, 1, False)
+    g2_directed.AddEdge(0, 2, False)
+    g2_directed.AddEdge(2, 3, False)
+    g2_directed.AddEdge(3, 4, False)
+    g2_directed.AddEdge(4, 1, False)
+
+    g2_directed.DetectCycle(0)
+
+    if g2_directed.CyclePresent() == True:
+        print("Cycle found in the directed graph g2")
+    else:
+        print("Cycle not found in the directed graph g2")
+
+if __name__ == "__main__":
+    main()
