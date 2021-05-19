@@ -1,70 +1,59 @@
+#dp +binary search
+class Solution:
+    def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
+        n = len(startTime)
+        segments = []
+        for i in range(n):
+            segments.append([startTime[i],endTime[i],profit[i]])
+        
+        segments.sort(key=lambda x:x[1])
+        
+        dp = [0]*n
+        for i in range(n):
+            # if we don't take i
+            if i>0:
+                dp[i] = dp[i-1]
+            
+            # if we take i
+            l = 0
+            r = i
+            while l+1<r:
+                mid = l+(r-l)//2
+                if segments[mid][1]<=segments[i][0]:
+                    l = mid
+                else:
+                    r = mid
+            if segments[l][1]<=segments[i][0]:
+                dp[i] = max(dp[i],dp[l]+segments[i][2])
+            
+            dp[i] = max(dp[i],segments[i][2])
+        
+        return dp[-1]
+#only dp
 
-
-# Python program for weighted job scheduling using Dynamic  
-# Programming and Binary Search 
-  
-# Class to represent a job 
-class Job: 
-    def __init__(self, start, finish, profit): 
-        self.start  = start 
-        self.finish = finish 
-        self.profit  = profit 
-  
-  
-# A Binary Search based function to find the latest job 
-# (before current job) that doesn't conflict with current 
-# job.  "index" is index of the current job.  This function 
-# returns -1 if all jobs before index conflict with it. 
-# The array jobs[] is sorted in increasing order of finish 
-# time. 
-def binarySearch(job, start_index): 
-  
-    # Initialize 'lo' and 'hi' for Binary Search 
-    lo = 0
-    hi = start_index - 1
-  
-    # Perform binary Search iteratively 
-    while lo <= hi: 
-        mid = (lo + hi) // 2
-        if job[mid].finish <= job[start_index].start: 
-            if job[mid + 1].finish <= job[start_index].start: 
-                lo = mid + 1
-            else: 
-                return mid 
-        else: 
-            hi = mid - 1
-    return -1
-  
-# The main function that returns the maximum possible 
-# profit from given array of jobs 
-def schedule(job): 
-    
-    # Sort jobs according to finish time 
-    job = sorted(job, key = lambda j: j.finish) 
-  
-    # Create an array to store solutions of subproblems.  table[i] 
-    # stores the profit for jobs till arr[i] (including arr[i]) 
-    n = len(job)  
-    table = [0 for _ in range(n)] 
-  
-    table[0] = job[0].profit; 
-  
-    # Fill entries in table[] using recursive property 
-    for i in range(1, n): 
-  
-        # Find profit including the current job 
-        inclProf = job[i].profit 
-        l = binarySearch(job, i) 
-        if (l != -1): 
-            inclProf += table[l]; 
-  
-        # Store maximum of including and excluding 
-        table[i] = max(inclProf, table[i - 1]) 
-  
-    return table[n-1] 
-  
-# Driver code to test above function 
-job = [Job(1, 2, 50), Job(3, 5, 20),  
-      Job(6, 19, 100), Job(2, 100, 200)] 
-print("Optimal profit is"), 
-print schedule(job) 
+class Solution:
+    def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
+        n = len(startTime)
+        segments = []
+        for i in range(n):
+            segments.append([startTime[i],endTime[i],profit[i]])
+        
+        segments.sort(key=lambda x:x[1])
+        
+        dp = [0]*n
+        for i in range(n):
+            # if we don't take i
+            if i>0:
+                dp[i] = dp[i-1]
+            
+            # if we take i
+            
+            for j in range(i-1,-1,-1):
+                if segments[j][1]<=segments[i][0]:
+                    dp[i] = max(dp[i],dp[j]+segments[i][2])
+                    break
+            
+            # take into count when interval i is the first one
+            dp[i] = max(dp[i],segments[i][2])
+        
+        return dp[-1]
